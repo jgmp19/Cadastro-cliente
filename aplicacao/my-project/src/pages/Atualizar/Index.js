@@ -1,5 +1,5 @@
 import { MenuItem, TextField, Button } from '@material-ui/core';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -27,15 +27,16 @@ export default function Atualizar() {
 
     async function handleEnviar() {
         const data = {
+            id: id,
             nome: nome,
             cpf: cpf,
             endereco: endereco,
             telefone: telefones,
             email: emails
         };
-        if(!(regNome.exec(nome))) return toast.error("Nome invalido!")
-        if(!(regNumero.exec(cpf))) return toast.error("Cpf invalido!")
-        if(!(regNumero.exec(endereco.cep))) return toast.error("Cep invalido!")
+        if (!(regNome.exec(nome))) return toast.error("Nome invalido!")
+        if (!(regNumero.exec(cpf))) return toast.error("Cpf invalido!")
+        if (!(regNumero.exec(endereco.cep))) return toast.error("Cep invalido!")
         emails.map(email => {
             if (!(regEmail.exec(email.texto))) return toast.error("Email invalido!")
             if (email.texto.length === 0) return toast.error("Preencha o campo email")
@@ -49,7 +50,7 @@ export default function Atualizar() {
         if ((nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
 
             console.log(data)
-            await api.post('cliente', data)
+            await api.put(`cliente/${id}`, data)
                 .then((res) => {
                     console.log(res.data)
                 })
@@ -78,7 +79,7 @@ export default function Atualizar() {
 
     function updateTelefoneNumero(e, index) {
         telefones[index].numero = e.target.value;
-        if(!(regNumero.exec(telefones[index].numero))) return toast.error("Somente numeros!")
+        if (!(regNumero.exec(telefones[index].numero))) return toast.error("Somente numeros!")
         setTelefones([...telefones])
     }
 
