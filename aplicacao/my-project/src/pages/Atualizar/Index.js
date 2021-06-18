@@ -42,10 +42,9 @@ export default function Atualizar() {
         })
         telefones.map(tel => {
             if (!(tel.numero.length >= 8 && tel.tipo.length > 0)) {
-                if(!(regNumero.exec(tel.numero))) return toast.error("Numero de telefone invalido!")
                 return toast.error("Preencha o campo telefone certamente!")
             }
-            
+
         })
         if ((nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
 
@@ -79,6 +78,7 @@ export default function Atualizar() {
 
     function updateTelefoneNumero(e, index) {
         telefones[index].numero = e.target.value;
+        if(!(regNumero.exec(telefones[index].numero))) return toast.error("Somente numeros!")
         setTelefones([...telefones])
     }
 

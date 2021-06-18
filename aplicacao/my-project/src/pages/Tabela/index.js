@@ -48,11 +48,6 @@ export default function Tabela() {
         })
     }
 
-    function buttons() {
-
-    }
-
-
     if (loading) {
         return (
             <div className="tabela-info">

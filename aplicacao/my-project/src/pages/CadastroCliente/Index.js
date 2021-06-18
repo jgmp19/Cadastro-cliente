@@ -41,8 +41,7 @@ export default function CadastroCliente() {
             if (email.texto.length === 0) return toast.error("Preencha o campo email")
         })
         telefones.map(tel => {
-            if (!(tel.numero.length > 8 && tel.tipo.length > 0)) {
-                if(!(regNumero.exec(tel.numero))) return toast.error("Numero de telefone invalido!")
+            if (!(tel.numero.length >= 8 && tel.tipo.length > 0)) {
                 return toast.error("Preencha o campo telefone certamente!")
             }
 
@@ -78,6 +77,7 @@ export default function CadastroCliente() {
 
     function updateTelefoneNumero(e, index) {
         telefones[index].numero = e.target.value;
+        if(!(regNumero.exec(telefones[index].numero))) return toast.error("Somente numeros!")
         setTelefones([...telefones])
     }
 
