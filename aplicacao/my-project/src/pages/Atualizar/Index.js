@@ -21,27 +21,36 @@ export default function Atualizar() {
     const [telefones, setTelefones] = useState([]);
     const [emails, setEmails] = useState([]);
     let history = useHistory();
+    const regEmail = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+    const regNome = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ0-9\s]+$/
+    const regNumero = /^\d+$/
 
     async function handleEnviar() {
         const data = {
-            id: id,
             nome: nome,
             cpf: cpf,
             endereco: endereco,
             telefone: telefones,
             email: emails
         };
-
+        if(!(regNome.exec(nome))) return toast.error("Nome invalido!")
+        if(!(regNumero.exec(cpf))) return toast.error("Cpf invalido!")
+        if(!(regNumero.exec(endereco.cep))) return toast.error("Cep invalido!")
+        emails.map(email => {
+            if (!(regEmail.exec(email.texto))) return toast.error("Email invalido!")
+            if (email.texto.length === 0) return toast.error("Preencha o campo email")
+        })
+        telefones.map(tel => {
+            if (!(tel.numero.length >= 8 && tel.tipo.length > 0)) {
+                if(!(regNumero.exec(tel.numero))) return toast.error("Numero de telefone invalido!")
+                return toast.error("Preencha o campo telefone certamente!")
+            }
+            
+        })
         if ((nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
-            telefones.map(tel=>{
-                if(tel.numero.length < 8 || tel.tipo.length < 1) return toast.error("Preencha os campos certamente!")
 
-            })
-            emails.map(email=>{
-                if(email.texto.length === 0 ) return toast.error("Preencha os campos certamente!")
-            })
             console.log(data)
-            await api.put(`cliente/${id}`, data)
+            await api.post('cliente', data)
                 .then((res) => {
                     console.log(res.data)
                 })
@@ -55,6 +64,7 @@ export default function Atualizar() {
             return toast.error("Preencha os campos certamente!")
         }
     }
+
 
     function updateField(event) {
         const end = { ...endereco }
