@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-
+var cont = 0;
 export default function CadastroCliente() {
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
@@ -95,15 +95,6 @@ export default function CadastroCliente() {
         setEmails([...emails, { texto: "" }]);
     }
 
-    function attCep() {
-        if (endereco.cep < 8) {
-            return;
-        }
-        else {
-            const res = axios.get(`viacep.com.br/ws/${endereco.cep}/json/`);
-            console.log(res);
-        }
-    }
 
 
 
@@ -115,17 +106,33 @@ export default function CadastroCliente() {
         setEmails([emails.filter((_,index) => index !== post)])
     } */
 
-    useEffect(() => {
-        function attCep() {
-            if (endereco.cep.length < 8) {
-                return;
-            }
-            else {
-                const res = axios.get(`viacep.com.br/ws/${endereco.cep}/json/`);
-                console.log(res);
-            }
+    
+    function attCep() {
+        
+        if (endereco.cep.length < 8) {
+            return;
         }
-        attCep()
+        else if(cont === 0) {
+            cont++;
+            axios.get(`https://viacep.com.br/ws/${endereco.cep}/json/`)
+            .then((res) => {
+                setEndereco(prevState => {
+                    return { ...prevState, 
+                        logradouro: res.data.logradouro,
+                        bairro: res.data.bairro,
+                        cidade: res.data.localidade,
+                        uf: res.data.uf
+                    }
+                });
+                console.log(res.data)
+            })
+            console.log(endereco)
+            
+        }
+    }
+
+    useEffect(() => {
+       
     })
 
 
@@ -136,7 +143,7 @@ export default function CadastroCliente() {
                 <TextField inputProps={{ maxLength: 100 }} placeholder="Nome" variant="outlined" type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
                 <TextField inputProps={{ maxLength: 11 }} placeholder="CPF" variant="outlined" type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
                 <h2>Endereço</h2>
-                <TextField inputProps={{ maxLength: 8 }} placeholder="CEP" variant="outlined" type="text" value={endereco.cep} name="cep" onChange={(e) => updateField(e)} />
+                <TextField inputProps={{ maxLength: 8 }} onKeypress={attCep()} placeholder="CEP" variant="outlined" type="text" value={endereco.cep} name="cep" onChange={(e) => updateField(e)} />
                 <TextField placeholder="Logradouro" variant="outlined" type="text" name="logradouro" value={endereco.logradouro} onChange={(e) => updateField(e)} />
                 <TextField placeholder="Bairro" variant="outlined" type="text" value={endereco.bairro} name="bairro" onChange={(e) => updateField(e)} />
                 <TextField placeholder="Cidade" variant="outlined" type="text" value={endereco.cidade} name="cidade" onChange={(e) => updateField(e)} />

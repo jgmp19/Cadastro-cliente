@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+var cont = 0;
 
 export default function Atualizar() {
     const [id, setId] = useState("");
@@ -37,7 +38,7 @@ export default function Atualizar() {
         if (!(regNome.exec(nome))) return toast.error("Nome invalido!")
         if (!(regNumero.exec(cpf))) return toast.error("Cpf invalido!")
         if (!(regNumero.exec(endereco.cep))) return toast.error("Cep invalido!")
-        emails.map(email => {
+        emails.map((email, e) => {
             if (!(regEmail.exec(email.texto))) return toast.error("Email invalido!")
             if (email.texto.length === 0) return toast.error("Preencha o campo email")
         })
@@ -98,12 +99,25 @@ export default function Atualizar() {
     }
 
     function attCep() {
-        if (endereco.cep < 8) {
+        if (endereco.cep.length < 8) {
             return;
         }
-        else {
-            const res = axios.get(`viacep.com.br/ws/${endereco.cep}/json/`);
-            console.log(res);
+        else if(cont === 0){
+            cont++;
+            axios.get(`https://viacep.com.br/ws/${endereco.cep}/json/`)
+            .then((res) => {
+                setEndereco(prevState => {
+                    return { ...prevState, 
+                        logradouro: res.data.logradouro,
+                        bairro: res.data.bairro,
+                        cidade: res.data.localidade,
+                        uf: res.data.uf
+                    }
+                });
+                console.log(res.data)
+            })
+            console.log(endereco)
+            
         }
     }
 
@@ -141,7 +155,7 @@ export default function Atualizar() {
                 <TextField inputProps={{ maxLength: 100 }} placeholder="Nome" variant="outlined" type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
                 <TextField inputProps={{ maxLength: 11 }} placeholder="CPF" variant="outlined" type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
                 <h2>Endereço</h2>
-                <TextField inputProps={{ maxLength: 8 }} placeholder="CEP" variant="outlined" type="text" value={endereco.cep} name="cep" onChange={(e) => updateField(e)} />
+                <TextField inputProps={{ maxLength: 8 }} onKeypress={attCep()} placeholder="CEP" variant="outlined" type="text" value={endereco.cep} name="cep" onChange={(e) => updateField(e)} />
                 <TextField placeholder="Logradouro" variant="outlined" type="text" name="logradouro" value={endereco.logradouro} onChange={(e) => updateField(e)} />
                 <TextField placeholder="Bairro" variant="outlined" type="text" value={endereco.bairro} name="bairro" onChange={(e) => updateField(e)} />
                 <TextField placeholder="Cidade" variant="outlined" type="text" value={endereco.cidade} name="cidade" onChange={(e) => updateField(e)} />
