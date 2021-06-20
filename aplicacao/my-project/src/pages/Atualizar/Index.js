@@ -70,6 +70,7 @@ export default function Atualizar() {
     function updateField(event) {
         const end = { ...endereco }
         end[event.target.name] = event.target.value
+        if (!(regNumero.exec(end.cep))) return toast.error("Somente numeros!")
         setEndereco(end)
     }
 
@@ -96,6 +97,12 @@ export default function Atualizar() {
     function handleAddEmail(e) {
         e.preventDefault();
         setEmails([...emails, { texto: "" }]);
+    }
+
+    function updateCpf(e) {
+        let cpff = e.target.value;
+        if(!(regNumero.exec(cpff))) return toast.error("Somente numeros!")
+        setCpf(cpff)
     }
 
     function attCep() {
@@ -153,7 +160,7 @@ export default function Atualizar() {
             <div className="container" >
                 <h1>Cadastro Cliente</h1>
                 <TextField inputProps={{ maxLength: 100 }} placeholder="Nome" variant="outlined" type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
-                <TextField inputProps={{ maxLength: 11 }} placeholder="CPF" variant="outlined" type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+                <TextField inputProps={{ maxLength: 11 }} placeholder="CPF" variant="outlined" type="text" value={cpf} onChange={(e) => updateCpf(e)} />
                 <h2>Endereço</h2>
                 <TextField inputProps={{ maxLength: 8 }} onKeypress={attCep()} placeholder="CEP" variant="outlined" type="text" value={endereco.cep} name="cep" onChange={(e) => updateField(e)} />
                 <TextField placeholder="Logradouro" variant="outlined" type="text" name="logradouro" value={endereco.logradouro} onChange={(e) => updateField(e)} />

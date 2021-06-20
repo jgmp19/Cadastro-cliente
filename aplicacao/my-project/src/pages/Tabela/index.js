@@ -79,7 +79,7 @@ export default function Tabela() {
                                 <TableCell align="center" >
                                     {row.telefone.map((tel) => (
                                         <div>
-                                            {`Telefone:${tel.tipo} Tipo:${tel.numero}`}
+                                            {`Telefone:${tel.numero} Tipo:${tel.tipo}`}
                                         </div>
                                     ))}</TableCell>
 
