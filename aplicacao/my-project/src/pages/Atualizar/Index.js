@@ -28,6 +28,8 @@ export default function Atualizar() {
 
     async function handleEnviar() {
         let erroEmail = 0
+        let erroTelefone = 0
+
         const data = {
             id: id,
             nome: nome,
@@ -44,13 +46,12 @@ export default function Atualizar() {
                 erroEmail++
                 return toast.error("Email invalido!")}
         }
-        telefones.map(tel => {
-            if (!(tel.numero.length >= 8 && ((tel.tipo === 'Residencial')||(tel.tipo === 'Celular')||(tel.tipo === 'Trabalho')))) {
-                return toast.error("Preencha o campo telefone certamente!")
-            }
-
-        })
-        if ((nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
+        for(var i=0; i< telefones.length; i++){
+            if (!((telefones[i].numero.length >= 8 && ((telefones[i].tipo === 'Residencial')||(telefones[i].tipo === 'Celular')||(telefones[i].tipo === 'Trabalho'))))){
+                erroTelefone++
+                return toast.error("Preencha o campo telefone certamente!")}
+        }
+        if ((erroEmail === 0 ) && (erroTelefone === 0 ) &&(nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
 
             console.log(data)
             await api.put(`cliente/${id}`, data)

@@ -90,7 +90,7 @@ export default function Tabela() {
                                     </div>
                                 ))}</TableCell>
 
-                                { tokenUsuario === `"1234"` ? <TableCell align="center"><Button variant="contained" color="secondary" onClick={(e) => deleteRow(row.id, e)}>Delete</Button> <Button variant="contained" color="default">{sessionStorage.setItem("idCliente", row.id)}<Link to="/atualizar">Atualizar</Link></Button></TableCell> : ''}
+                                { tokenUsuario === `"1234"` ? <TableCell align="center"><Button  variant="contained" color="secondary" onClick={(e) => deleteRow(row.id, e)}>Delete</Button> <Button variant="contained" color="default">{sessionStorage.setItem("idCliente", row.id)}<Link style={{ textDecoration: 'none', color: 'black' }} to="/atualizar">Atualizar</Link></Button></TableCell> : ''}
 
                             </TableRow>
                         ))}

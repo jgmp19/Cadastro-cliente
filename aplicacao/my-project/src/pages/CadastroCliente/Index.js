@@ -27,6 +27,7 @@ export default function CadastroCliente() {
 
     async function handleEnviar() {
         let erroEmail  = 0;
+        let erroTelefone  = 0;
         const data = {
             nome: nome,
             cpf: cpf,
@@ -42,22 +43,12 @@ export default function CadastroCliente() {
                 erroEmail++
                 return toast.error("Email invalido!")}
         }
-        for(var i=0; i< emails.length; i++){
-            if (!(regEmail.exec(emails[i].texto))){
-                erroEmail++
-                return toast.error("Email invalido!")}
+        for(var i=0; i< telefones.length; i++){
+            if (!((telefones[i].numero.length >= 8 && ((telefones[i].tipo === 'Residencial')||(telefones[i].tipo === 'Celular')||(telefones[i].tipo === 'Trabalho'))))){
+                erroTelefone++
+                return toast.error("Preencha o campo telefone certamente!")}
         }
-        /* emails.map(email => {
-            if (!(regEmail.exec(email.texto))) return toast.error("Email invalido!")
-            if (email.texto.length === 0) return toast.error("Preencha o campo email")
-        }) */
-        telefones.map(tel => {
-            if (!(tel.numero.length >= 8 && ((tel.tipo === 'Residencial')||(tel.tipo === 'Celular')||(tel.tipo === 'Trabalho')))) {
-                return toast.error("Preencha o campo telefone certamente!")
-            }
-
-        })
-        if ((erroEmail ===0 ) && (nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
+        if ((erroEmail === 0 ) && (erroTelefone === 0 ) && (nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
 
             console.log(data)
             await api.post('cliente', data)
