@@ -26,6 +26,7 @@ export default function CadastroCliente() {
     let history = useHistory();
 
     async function handleEnviar() {
+        let erroEmail  = 0;
         const data = {
             nome: nome,
             cpf: cpf,
@@ -36,17 +37,27 @@ export default function CadastroCliente() {
         if(!(regNome.exec(nome))) return toast.error("Nome invalido!")
         if(!(regNumero.exec(cpf))) return toast.error("Cpf invalido!")
         if(!(regNumero.exec(endereco.cep))) return toast.error("Cep invalido!")
-        emails.map(email => {
+        for(var i=0; i< emails.length; i++){
+            if (!(regEmail.exec(emails[i].texto))){
+                erroEmail++
+                return toast.error("Email invalido!")}
+        }
+        for(var i=0; i< emails.length; i++){
+            if (!(regEmail.exec(emails[i].texto))){
+                erroEmail++
+                return toast.error("Email invalido!")}
+        }
+        /* emails.map(email => {
             if (!(regEmail.exec(email.texto))) return toast.error("Email invalido!")
             if (email.texto.length === 0) return toast.error("Preencha o campo email")
-        })
+        }) */
         telefones.map(tel => {
-            if (!(tel.numero.length >= 8 && tel.tipo.length > 0)) {
+            if (!(tel.numero.length >= 8 && ((tel.tipo === 'Residencial')||(tel.tipo === 'Celular')||(tel.tipo === 'Trabalho')))) {
                 return toast.error("Preencha o campo telefone certamente!")
             }
 
         })
-        if ((nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
+        if ((erroEmail ===0 ) && (nome.length > 3) && (nome.length <= 100) && (cpf.length === 11) && (endereco.cep.length > 0) && (endereco.logradouro.length > 0) && (endereco.bairro.length > 0) && (endereco.cidade.length > 0) && (endereco.uf.length > 0) && (telefones.length > 0) && (emails.length > 0)) {
 
             console.log(data)
             await api.post('cliente', data)

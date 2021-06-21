@@ -27,6 +27,7 @@ export default function Atualizar() {
     const regNumero = /^\d+$/
 
     async function handleEnviar() {
+        let erroEmail = 0
         const data = {
             id: id,
             nome: nome,
@@ -38,12 +39,13 @@ export default function Atualizar() {
         if (!(regNome.exec(nome))) return toast.error("Nome invalido!")
         if (!(regNumero.exec(cpf))) return toast.error("Cpf invalido!")
         if (!(regNumero.exec(endereco.cep))) return toast.error("Cep invalido!")
-        emails.map((email, e) => {
-            if (!(regEmail.exec(email.texto))) return toast.error("Email invalido!")
-            if (email.texto.length === 0) return toast.error("Preencha o campo email")
-        })
+        for(var i=0; i< emails.length; i++){
+            if (!(regEmail.exec(emails[i].texto))){
+                erroEmail++
+                return toast.error("Email invalido!")}
+        }
         telefones.map(tel => {
-            if (!(tel.numero.length >= 8 && tel.tipo.length > 0)) {
+            if (!(tel.numero.length >= 8 && ((tel.tipo === 'Residencial')||(tel.tipo === 'Celular')||(tel.tipo === 'Trabalho')))) {
                 return toast.error("Preencha o campo telefone certamente!")
             }
 
